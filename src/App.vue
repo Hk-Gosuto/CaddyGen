@@ -76,13 +76,22 @@ function importHosts(newHosts: CaddyHost[]) {
       </h1>
       
       <div class="mb-8">
-        <button 
-          class="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-2"
-          @click="toggleDescription"
-        >
-          <component :is="showDescription ? ChevronUp : ChevronDown" class="w-4 h-4" />
-          <span>About this tool</span>
-        </button>
+        <div class=" mb-2">
+          <button 
+            @click="showImportModal = true"
+            class="absolute top-0 right-0 inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg px-4 py-2 transition-colors" style="position:absolute;top:10px;right:10px;"
+          >
+            <Upload class="w-4 h-4" />
+            Import Caddyfile
+          </button>
+          <button 
+            class="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            @click="toggleDescription"
+          >
+            <component :is="showDescription ? ChevronUp : ChevronDown" class="w-4 h-4" />
+            <span>About CaddyGen</span>
+          </button>
+        </div>
         <div 
           v-if="showDescription"
           class="text-muted-foreground space-y-2 animate-in fade-in slide-in-from-top-1 duration-200"
@@ -105,14 +114,6 @@ function importHosts(newHosts: CaddyHost[]) {
           >
             <Plus class="w-4 h-4" />
             Add New Host
-          </button>
-          
-          <button 
-            @click="showImportModal = true"
-            class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg px-4 py-2 transition-colors"
-          >
-            <Upload class="w-4 h-4" />
-            Import Caddyfile
           </button>
         </div>
       
@@ -261,16 +262,19 @@ function importHosts(newHosts: CaddyHost[]) {
               rel="noopener noreferrer"
               class="hover:text-foreground transition-colors"
             >
-              Documentation
+              Caddy Documentation
             </a>
             <span>•</span>
             <a 
-              href="https://github.com/caddyserver/caddy" 
+              href="https://github.com/DeanWard/CaddyGen" 
               target="_blank" 
               rel="noopener noreferrer"
               class="hover:text-foreground transition-colors"
             >
-              GitHub
+              <div class="flex items-center gap-1">
+                <Github class="w-4 h-4" />
+                <span>GitHub</span>
+              </div>
             </a>
           </div>
           <div class="text-center md:text-right">
@@ -282,4 +286,3 @@ function importHosts(newHosts: CaddyHost[]) {
     </footer>
   </div>
 </template>
-

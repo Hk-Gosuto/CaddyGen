@@ -39,7 +39,13 @@ const host = ref<CaddyHost>(props.initialHost || {
       window: '1m'
     },
     cspEnabled: false,
-    csp: ''
+    csp: '',
+    forwardAuth: {
+      enabled: false,
+      url: '',
+      verifyHeader: '',
+      verifyValue: ''
+    }
   },
   cors: {
     enabled: false,
@@ -56,14 +62,17 @@ const host = ref<CaddyHost>(props.initialHost || {
 
 const serverType = ref(host.value.fileServer ? 'fileServer' : '');
 
-function handleServerTypeChange() {
+function handleServerTypeChange(event: Event) {
+  const value = (event.target as HTMLSelectElement).value;
+  serverType.value = value;
   if (serverType.value === 'fileServer') {
     host.value.reverseProxy = undefined;
     if (!host.value.fileServer) {
       host.value.fileServer = {
         root: '/var/www/html',
         browse: false,
-        php: false
+        php: false,
+        hide: []
       };
     }
   } else {
@@ -213,6 +222,38 @@ function applyPreset(preset: PresetConfig) {
                 placeholder="10.0.0.0/8"
                 rows="3"
               ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox">
+                <input type="checkbox" v-model="host.security.forwardAuth.enabled" />
+                Enable Forward Authentication
+              </label>
+            </div>
+
+            <div v-if="host.security.forwardAuth.enabled" class="space-y-4" style="margin-bottom:20px;">
+              <div class="form-group">
+                <label>Authentication URL:</label>
+                <input
+                  v-model="host.security.forwardAuth.url"
+                  placeholder="http://authelia:9091/api/verify"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Verify Header (optional):</label>
+                <input
+                  v-model="host.security.forwardAuth.verifyHeader"
+                  placeholder="Remote-User"
+                />
+              </div>
+              <div class="form-group">
+                <label>Verify Value (optional):</label>
+                <input
+                  v-model="host.security.forwardAuth.verifyValue"
+                  placeholder="{{user}}"
+                />
+              </div>
             </div>
 
             <div class="form-group">

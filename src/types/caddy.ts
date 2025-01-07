@@ -41,6 +41,12 @@ export interface CaddyHost {
     };
     cspEnabled: boolean;
     csp: string;
+    forwardAuth: {
+      enabled: boolean;
+      url: string;
+      verifyHeader?: string;
+      verifyValue?: string;
+    };
   };
   performance?: {
     brotli: boolean;

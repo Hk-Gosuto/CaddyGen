@@ -5,9 +5,11 @@ import PresetModal from './PresetModal.vue';
 import type { PresetConfig } from '../types/caddy';
 import { presets } from '../presets';
 
-const props = defineProps<{
+interface Props {
   initialPresetName?: string;
-}>();
+}
+
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   select: [preset: PresetConfig];

@@ -5,9 +5,11 @@ import 'prismjs/themes/prism-tomorrow.css';
 import { Download, Copy } from 'lucide-vue-next';
 import type { CaddyHost } from '../types/caddy';
 
-const props = defineProps<{
+interface Props {
   hosts: CaddyHost[];
-}>();
+}
+
+const props = defineProps<Props>();
 
 onMounted(() => {
   if (!Prism.languages.caddy) {
@@ -21,7 +23,7 @@ onMounted(() => {
         greedy: true
       },
       'directive': {
-        pattern: /^\s*(root|file_server|reverse_proxy|encode|tls|basicauth|header|php_fastcgi|rate_limit|respond|remote_ip|hide|not)\b/m,
+        pattern: /^\s*(root|file_server|reverse_proxy|encode|tls|basicauth|header|php_fastcgi|rate_limit|respond|remote_ip|hide|not|forward_auth|uri|copy_headers)\b/m,
         alias: 'keyword'
       },
       'block': {
@@ -33,6 +35,10 @@ onMounted(() => {
             inside: Prism.languages.caddy
           }
         }
+      },
+      'variable': {
+        pattern: /\{\{[^}]+\}\}/,
+        alias: 'variable'
       },
       'matcher': {
         pattern: /@\w+/,
@@ -59,7 +65,7 @@ onMounted(() => {
         alias: 'operator'
       },
       'option': {
-        pattern: /\b(browse|internal|gzip|brotli|php_fastcgi)\b/,
+        pattern: /\b(browse|internal|gzip|brotli|php_fastcgi|uri|copy_headers)\b/,
         alias: 'property'
       },
       'number': {
@@ -132,6 +138,18 @@ const caddyConfig = computed(() => {
         }
         lines.push('    }');
         lines.push('    respond @blocked 403');
+      }
+
+      // Forward Authentication
+      if (host.security?.forwardAuth?.enabled && host.security.forwardAuth.url) {
+        lines.push('    forward_auth * {');
+        lines.push(`        uri ${host.security.forwardAuth.url}`);
+        if (host.security.forwardAuth.verifyHeader && host.security.forwardAuth.verifyValue) {
+          lines.push('        copy_headers {');
+          lines.push(`            ${host.security.forwardAuth.verifyHeader} ${host.security.forwardAuth.verifyValue}`);
+          lines.push('        }');
+        }
+        lines.push('    }');
       }
 
       if (host.security?.rateLimit?.enabled && host.security.rateLimit?.requests && host.security.rateLimit.window) {

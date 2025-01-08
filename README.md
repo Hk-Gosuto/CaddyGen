@@ -40,7 +40,7 @@ Deploy CaddyGen using Docker with ease:
 Pull the latest image from Docker Hub and run it:
 ```bash
 docker pull wardy784/caddygen:latest
-docker run -p 8080:80 wardy784/caddygen:latest
+docker run -d --restart unless-stopped -p 8189:80 wardy784/caddygen:latest
 ```
 
 ### **Run with Docker Compose**
@@ -52,8 +52,9 @@ services:
   app:
     image: wardy784/caddygen:latest
     ports:
-      - "8080:80"
+      - "8189:80"
     restart: unless-stopped
+    container_name: caddygen
 ```
 
 To deploy:

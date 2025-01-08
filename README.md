@@ -68,7 +68,7 @@ Access the app at `http://localhost:8189`.
 If you prefer to build the image yourself:
 ```bash
 docker build -t caddygen .
-docker run -p 8080:80 caddygen
+docker run -p 8189:80 caddygen
 ```
 
 ---

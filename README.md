@@ -62,7 +62,7 @@ To deploy:
 docker compose up -d
 ```
 
-Access the app at `http://localhost:8080`.
+Access the app at `http://localhost:8189`.
 
 ### **Build Locally**
 If you prefer to build the image yourself:

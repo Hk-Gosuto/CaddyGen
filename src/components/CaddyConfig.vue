@@ -23,7 +23,7 @@ onMounted(() => {
         greedy: true
       },
       'directive': {
-        pattern: /^\s*(root|file_server|reverse_proxy|encode|tls|basicauth|header|php_fastcgi|rate_limit|respond|remote_ip|hide|not|forward_auth|uri|copy_headers)\b/m,
+        pattern: /^\s*(root|file_server|reverse_proxy|encode|tls|basicauth|header|php_fastcgi|php_server|rate_limit|respond|remote_ip|hide|not|forward_auth|uri|copy_headers)\b/m,
         alias: 'keyword'
       },
       'block': {
@@ -65,7 +65,7 @@ onMounted(() => {
         alias: 'operator'
       },
       'option': {
-        pattern: /\b(browse|internal|gzip|brotli|php_fastcgi|uri|copy_headers)\b/,
+        pattern: /\b(browse|internal|gzip|brotli|php_fastcgi|php_server|uri|copy_headers)\b/,
         alias: 'property'
       },
       'number': {
@@ -101,12 +101,20 @@ const caddyConfig = computed(() => {
       if (host.presetName) {
         lines.push(`# ${host.presetName}`);
       }
-      
+
+      if (host.fileServer && host.fileServer.frankenphp) {
+        lines.push('{');
+        lines.push('    frankenphp');
+        lines.push('}');
+      }
+
       lines.push(`${host.domain} {`);
 
       if (host.fileServer) {
         lines.push(`    root * ${host.fileServer.root}`);
-        if (host.fileServer.php) {
+        if (host.fileServer.frankenphp) {
+          lines.push('    php_server');
+        } else if (host.fileServer.php) {
           lines.push('    php_fastcgi unix//run/php/php-fpm.sock');
         }
         lines.push(`    file_server${host.fileServer.browse ? ' browse' : ''}`);

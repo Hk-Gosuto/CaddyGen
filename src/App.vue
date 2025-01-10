@@ -198,10 +198,11 @@ function importHosts(newHosts: CaddyHost[]) {
               </div>
               <span v-if="host.fileServer" class="block mt-1 text-sm">
                 {{ host.fileServer.root }}
-                <span v-if="host.fileServer.browse || host.fileServer.php" class="text-white/60">
+                <span v-if="host.fileServer.browse || host.fileServer.php || host.fileServer.frankenphp" class="text-white/60">
                   ({{ [
                     host.fileServer.browse ? 'Browse' : null,
-                    host.fileServer.php ? 'PHP' : null
+                    host.fileServer.php ? 'PHP' : null,
+                    host.fileServer.frankenphp ? 'FrankenPHP' : null,
                   ].filter(Boolean).join(', ') }})
                 </span>
               </span>

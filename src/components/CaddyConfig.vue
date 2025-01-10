@@ -65,7 +65,7 @@ onMounted(() => {
         alias: 'operator'
       },
       'option': {
-        pattern: /\b(browse|internal|gzip|brotli|php_fastcgi|uri|copy_headers)\b/,
+        pattern: /\b(browse|internal|encode|brotli|php_fastcgi|uri|copy_headers)\b/,
         alias: 'property'
       },
       'number': {
@@ -115,12 +115,10 @@ const caddyConfig = computed(() => {
       }
       
       // Handle encoding directives
-      if (host.performance?.brotli && host.gzip) {
-        lines.push('    encode brotli gzip');
-      } else if (host.gzip) {
-        lines.push('    encode gzip');
-      } else if (host.performance?.brotli) {
-        lines.push('    encode brotli gzip');
+      if (host.performance?.brotli) {
+        lines.push('    encode zstd br gzip');
+      } else if (host.encode) {
+        lines.push('    encode');
       }
 
       // Security settings

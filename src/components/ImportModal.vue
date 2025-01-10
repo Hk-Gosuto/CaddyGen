@@ -53,7 +53,7 @@ function parseCaddyfile(content: string): CaddyHost[] {
     const host: CaddyHost = {
       id: crypto.randomUUID(),
       domain,
-      gzip: false
+      encode: false
     };
 
     for (let i = 1; i < lines.length; i++) {
@@ -81,8 +81,8 @@ function parseCaddyfile(content: string): CaddyHost[] {
         }
       } else if (line.startsWith('reverse_proxy')) {
         host.reverseProxy = line.split(' ').slice(1).join(' ');
-      } else if (line.startsWith('encode gzip')) {
-        host.gzip = true;
+      } else if (line.startsWith('encode')) {
+        host.encode = true;
       } else if (line.startsWith('tls')) {
         const email = line.split(' ')[1];
         host.tls = {

@@ -22,7 +22,7 @@ const host = ref<CaddyHost>(props.initialHost || {
     php: false,
     hide: []
   },
-  gzip: false,
+  encode: false,
   tls: {
     email: '',
     selfSigned: false
@@ -154,8 +154,8 @@ function applyPreset(preset: PresetConfig) {
 
         <div class="form-group">
           <label class="checkbox">
-            <input type="checkbox" v-model="host.gzip" />
-            Enable Gzip compression
+            <input type="checkbox" v-model="host.encode" />
+            Enable Gzip and Zstandard compression
           </label>
         </div>
 
@@ -311,7 +311,7 @@ function applyPreset(preset: PresetConfig) {
             <div class="form-group">
               <label class="checkbox">
                 <input type="checkbox" v-model="host.performance.brotli" />
-                Enable Brotli compression
+                Enable Brotli compression (requires <a href="https://caddyserver.com/docs/modules/http.encoders.br">an additional module</a>)
               </label>
             </div>
 

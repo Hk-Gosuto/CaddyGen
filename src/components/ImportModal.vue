@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { X, Upload } from 'lucide-vue-next';
 import type { CaddyHost } from '../types/caddy';
+import { v4 as uuidv4 } from 'uuid';
 
 const props = defineProps<{
   show: boolean;
@@ -51,7 +52,7 @@ function parseCaddyfile(content: string): CaddyHost[] {
     domain = domain === ':80' ? ':80' : domain;
     
     const host: CaddyHost = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       domain,
       encode: false
     };

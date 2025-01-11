@@ -1,4 +1,3 @@
-
 # **CaddyGen - Caddy Config Generator**
 
 CaddyGen is a user-friendly web interface for generating [Caddy server](https://caddyserver.com) configurations. Easily create and manage reverse proxy and file server configurations with support for SSL, compression, security headers, and more.

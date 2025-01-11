@@ -13,6 +13,8 @@ export interface CaddyHost {
   tls?: {
     email?: string;
     selfSigned?: boolean;
+    certFile?: string;
+    keyFile?: string;
   };
   encode?: boolean;
   basicAuth?: {

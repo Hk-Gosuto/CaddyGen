@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type { CaddyHost } from '../types/caddy';
 import PresetSelect from './PresetSelect.vue';
 import type { PresetConfig } from '../types/caddy';
@@ -27,7 +27,9 @@ const host = ref<CaddyHost>(props.initialHost || {
   encode: false,
   tls: {
     email: '',
-    selfSigned: false
+    selfSigned: false,
+    certFile: '',
+    keyFile: ''
   },
   security: {
     ipFilter: {
@@ -83,6 +85,12 @@ function handleServerTypeChange(event: Event) {
   }
 }
 const showAdvanced = ref(false);
+
+const tlsHasEmailOrSelfSigned = computed(() => {
+  if(host.value.tls.email && host.value.tls.email?.trim() !== '') return true;
+  if(host.value.tls.selfSigned) return true;
+  return false;
+});
 
 function handleSubmit() {
   emit('save', host.value);
@@ -188,6 +196,15 @@ function applyPreset(preset: PresetConfig) {
               <input type="checkbox" v-model="host.tls.selfSigned" />
               Use self-signed certificate
             </label>
+          </div>
+
+          <div class="form-group">
+            <label>Cert File:</label>
+            <input v-model="host.tls.certFile" placeholder="cert.pem" :disabled="tlsHasEmailOrSelfSigned" />
+          </div>
+          <div class="form-group">
+            <label>Key File:</label>
+            <input v-model="host.tls.keyFile" placeholder="key.pem" :disabled="tlsHasEmailOrSelfSigned" />
           </div>
 
           <!-- Security Section -->
@@ -408,6 +425,13 @@ function applyPreset(preset: PresetConfig) {
   font-size: 1rem;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+}
+
+.form-group input:disabled {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .checkbox {

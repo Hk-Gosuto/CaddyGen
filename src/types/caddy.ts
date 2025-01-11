@@ -14,7 +14,7 @@ export interface CaddyHost {
     email?: string;
     selfSigned?: boolean;
   };
-  gzip?: boolean;
+  encode?: boolean;
   basicAuth?: {
     username: string;
     password: string;

@@ -100,7 +100,7 @@ This project is built using the following technologies:
    npm run dev
    ```
 
-4. Open the app in your browser at `http://localhost:3000`.
+4. Open the app in your browser at `http://localhost:5173`.
 
 ---
 

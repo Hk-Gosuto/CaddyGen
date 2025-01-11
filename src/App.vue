@@ -193,7 +193,7 @@ function importHosts(newHosts: CaddyHost[]) {
                 <span>{{ host.fileServer ? 'File Server' : 'Reverse Proxy' }}</span>
                 <div class="flex gap-1">
                   <Lock v-if="host.tls?.email || host.tls?.selfSigned" class="w-4 h-4" title="TLS Enabled" />
-                  <Zap v-if="host.gzip" class="w-4 h-4" title="Gzip Enabled" />
+                  <Zap v-if="host.encode" class="w-4 h-4" title="Compression Enabled" />
                 </div>
               </div>
               <span v-if="host.fileServer" class="block mt-1 text-sm">

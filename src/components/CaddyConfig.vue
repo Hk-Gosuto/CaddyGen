@@ -65,7 +65,7 @@ onMounted(() => {
         alias: 'operator'
       },
       'option': {
-        pattern: /\b(browse|internal|gzip|brotli|php_fastcgi|php_server|uri|copy_headers)\b/,
+        pattern: /\b(browse|internal|gzip|brotli|zstd|br|php_fastcgi|php_server|uri|copy_headers)\b/,
         alias: 'property'
       },
       'number': {

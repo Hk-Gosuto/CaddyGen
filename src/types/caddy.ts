@@ -5,6 +5,7 @@ export interface CaddyHost {
     root: string;
     browse: boolean;
     php: boolean;
+    frankenphp: boolean;
     hide: string[];
   };
   presetName?: string;

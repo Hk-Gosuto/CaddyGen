@@ -20,6 +20,7 @@ const host = ref<CaddyHost>(props.initialHost || {
     root: '',
     browse: false,
     php: false,
+    frankenphp: false,
     hide: []
   },
   encode: false,
@@ -72,6 +73,7 @@ function handleServerTypeChange(event: Event) {
         root: '/var/www/html',
         browse: false,
         php: false,
+        frankenphp: false,
         hide: []
       };
     }
@@ -137,6 +139,13 @@ function applyPreset(preset: PresetConfig) {
             <label class="checkbox">
               <input type="checkbox" v-model="host.fileServer.php" />
               Enable PHP support
+            </label> 
+          </div>
+
+          <div class="form-group" v-if="host.fileServer.php || host.fileServer.frankenphp">
+            <label class="checkbox">
+              <input type="checkbox" v-model="host.fileServer.frankenphp" />
+              Enable <a href="https://frankenphp.dev">FrankenPHP</a>
             </label>
           </div>
         </template>
@@ -307,7 +316,7 @@ function applyPreset(preset: PresetConfig) {
           <!-- Performance Section -->
           <div class="advanced-section">
             <h3 class="text-lg font-semibold mb-4">Performance</h3>
-            
+ 
             <div class="form-group">
               <label class="checkbox">
                 <input type="checkbox" v-model="host.performance.brotli" />

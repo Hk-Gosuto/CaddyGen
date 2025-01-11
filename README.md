@@ -14,7 +14,7 @@ CaddyGen is a user-friendly web interface for generating [Caddy server](https://
 - 🛡️ Advanced **security options** (CSP, rate limiting, IP filtering)
 - ⚡ **Performance optimizations** (compression, caching)
 - 🌐 **CORS configuration**
-- 📁 File server options (directory listing, PHP support)
+- 📁 File server options (directory listing, PHP and FrankenPHP support)
 
 ---
 

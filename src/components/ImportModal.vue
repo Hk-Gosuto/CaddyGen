@@ -66,6 +66,7 @@ function parseCaddyfile(content: string): CaddyHost[] {
           root,
           browse: false,
           php: false,
+          frankenphp: false,
           hide: []
         };
       } else if (line.startsWith('file_server')) {
@@ -74,6 +75,7 @@ function parseCaddyfile(content: string): CaddyHost[] {
             root: '/',
             browse: line.includes('browse'),
             php: false,
+            frankenphp: false,
             hide: []
           };
         } else {

@@ -193,6 +193,9 @@ const caddyConfig = computed(() => {
       } else if (host.tls?.selfSigned) {
         lines.push('    tls internal');
       }
+      else if(host.tls?.certFile && host.tls?.keyFile) {
+        lines.push(`    tls ${host.tls.certFile} ${host.tls.keyFile}`);
+      }
 
       if (host.basicAuth?.length) {
         host.basicAuth.forEach(({ username, password }) => {

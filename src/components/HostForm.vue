@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import type { CaddyHost } from '../types/caddy';
 import PresetSelect from './PresetSelect.vue';
 import type { PresetConfig } from '../types/caddy';
+import { v4 as uuidv4 } from 'uuid';
 
 const props = defineProps<{
   initialHost?: CaddyHost;
@@ -14,7 +15,7 @@ const emit = defineEmits<{
 }>();
 
 const host = ref<CaddyHost>(props.initialHost || {
-  id: crypto.randomUUID(),
+  id: uuidv4(),
   domain: '',
   fileServer: {
     root: '',

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { onMounted } from 'vue';
-import PresetModal from './PresetModal.vue';
+import * as PresetModal from './PresetModal.vue';
 import type { PresetConfig } from '../types/caddy';
 import { presets } from '../presets';
 

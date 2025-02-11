@@ -228,7 +228,7 @@ const caddyConfig = computed(() => {
       }
 
       // File Server Hide Patterns
-      if (host.fileServer?.hide?.length > 0) {
+      if (host.fileServer?.hide && host.fileServer.hide.length > 0) {
         host.fileServer.hide.forEach((pattern) => {
           lines.push("    file_server {");
           lines.push(`        hide ${pattern}`);

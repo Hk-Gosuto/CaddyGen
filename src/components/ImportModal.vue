@@ -129,7 +129,7 @@ function importCaddyfile() {
     <div class="relative bg-card border border-border/50 rounded-lg shadow-lg w-full max-w-2xl">
       <!-- Header -->
       <div class="flex items-center justify-between p-6 border-b border-border/50">
-        <h2 class="text-xl font-semibold">Import Caddyfile</h2>
+        <h2 class="text-xl font-semibold">{{ $t('importModal.title') }}</h2>
         <button @click="emit('close')" class="text-muted-foreground hover:text-foreground">
           <X class="w-5 h-5" />
         </button>
@@ -138,7 +138,7 @@ function importCaddyfile() {
       <!-- Content -->
       <div class="p-6 space-y-4">
         <div>
-          <label class="block mb-2">Paste your Caddyfile content:</label>
+          <label class="block mb-2">{{ $t('importModal.paste') }}</label>
           <textarea
             v-model="caddyfileContent"
             class="w-full h-48 p-4 bg-muted rounded-lg font-mono text-sm"
@@ -149,7 +149,7 @@ function importCaddyfile() {
         </div>
         
         <div class="text-center">
-          <span class="text-muted-foreground">or</span>
+          <span class="text-muted-foreground">{{ $t('importModal.or') }}</span>
         </div>
         
         <div class="flex items-center justify-center">
@@ -162,7 +162,7 @@ function importCaddyfile() {
             />
             <div class="flex items-center gap-2">
               <Upload class="w-4 h-4" />
-              Upload Caddyfile
+              {{ $t('importModal.upload') }}
             </div>
           </label>
         </div>
@@ -174,14 +174,14 @@ function importCaddyfile() {
           @click="emit('close')"
           class="px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg transition-colors"
         >
-          Cancel
+          {{ $t('importModal.close') }}
         </button>
         <button
           @click="importCaddyfile"
           class="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors"
           :disabled="!caddyfileContent"
         >
-          Import
+          {{ $t('importModal.import') }}
         </button>
       </div>
     </div>

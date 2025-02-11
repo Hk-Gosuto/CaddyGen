@@ -70,38 +70,46 @@ function importHosts(newHosts: CaddyHost[]) {
           <Settings class="w-7 h-7 text-white" />
         </div>
         <div class="flex flex-col">
-          <span>CaddyGen</span>
-          <span class="text-lg font-normal text-white/80">Caddy Config Generator</span>
+          <span>{{ $t('app.title') }}</span>
+          <span class="text-lg font-normal text-white/80">{{ $t('app.subtitle') }}</span>
         </div>
       </h1>
       
       <div class="mb-8">
         <div class=" mb-2">
+          <div class="absolute top-0 right-0 flex gap-2" style="position:absolute;top:10px;right:10px;">
+          <button
+            @click="$i18n.locale = $i18n.locale === 'en' ? 'zh' : 'en'"
+            class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg px-4 py-2 transition-colors"
+          >
+            <Globe class="w-4 h-4" />
+            {{ $i18n.locale === 'en' ? '中文' : 'English' }}
+          </button>
           <button 
             @click="showImportModal = true"
-            class="absolute top-0 right-0 inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg px-4 py-2 transition-colors" style="position:absolute;top:10px;right:10px;"
+            class="inline-flex items-center gap-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg px-4 py-2 transition-colors"
           >
             <Upload class="w-4 h-4" />
-            Import Caddyfile
+            {{ $t('app.importCaddyfile') }}
           </button>
           <button 
             class="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
             @click="toggleDescription"
           >
             <component :is="showDescription ? ChevronUp : ChevronDown" class="w-4 h-4" />
-            <span>About CaddyGen</span>
+            <span>{{ $t('app.about') }}</span>
           </button>
+          </div>
         </div>
         <div 
           v-if="showDescription"
           class="text-muted-foreground space-y-2 animate-in fade-in slide-in-from-top-1 duration-200"
         >
           <p>
-            A user-friendly interface for generating Caddy server configurations. Create and manage reverse proxy and file server 
-            configurations with support for SSL, compression, security headers, and more.
+            {{ $t('app.description.part1') }}
           </p>
           <p>
-            Choose from popular application presets or create custom configurations. All changes are saved locally in your browser.
+            {{ $t('app.description.part2') }}
           </p>
         </div>
       </div>
@@ -113,12 +121,12 @@ function importHosts(newHosts: CaddyHost[]) {
             class="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white rounded-lg px-4 py-2 transition-colors"
           >
             <Plus class="w-4 h-4" />
-            Add New Host
+            {{ $t('app.addHost') }}
           </button>
         </div>
       
         <div v-if="hosts.length === 0" class="mt-8 text-center p-8 rounded-lg bg-card/50 border border-border/50">
-          <p class="text-muted-foreground">No hosts configured yet. Add your first host to get started!</p>
+          <p class="text-muted-foreground">{{ $t('app.noHosts') }}</p>
         </div>
       
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
@@ -159,7 +167,7 @@ function importHosts(newHosts: CaddyHost[]) {
             </div>
             <div class="flex items-center gap-2 mb-2">
               <span class="text-xs px-2 py-0.5 rounded-full bg-white text-primary">
-                {{ host.presetName || 'Custom' }}
+                {{ host.presetName || $t('app.preset.custom') }}
               </span>
               <template v-if="host.presetName" v-for="preset in presets" :key="preset.name">
                 <template v-if="preset.name === host.presetName">
@@ -188,12 +196,12 @@ function importHosts(newHosts: CaddyHost[]) {
                 </template>
               </template>
             </div>
-            <p class="text-white/80 mb-4">
+            <div class="text-white/80 mb-4">
               <div class="flex items-center gap-2">
-                <span>{{ host.fileServer ? 'File Server' : 'Reverse Proxy' }}</span>
+                <span>{{ host.fileServer ? $t('app.hostType.fileServer') : $t('app.hostType.reverseProxy') }}</span>
                 <div class="flex gap-1">
-                  <Lock v-if="host.tls?.email || host.tls?.selfSigned" class="w-4 h-4" title="TLS Enabled" />
-                  <Zap v-if="host.encode" class="w-4 h-4" title="Compression Enabled" />
+                  <Lock v-if="host.tls?.email || host.tls?.selfSigned" class="w-4 h-4" :title="$t('app.tls.enabled')" />
+                  <Zap v-if="host.encode" class="w-4 h-4" :title="$t('app.compression.enabled')" />
                 </div>
               </div>
               <span v-if="host.fileServer" class="block mt-1 text-sm">
@@ -207,7 +215,7 @@ function importHosts(newHosts: CaddyHost[]) {
                 </span>
               </span>
               <span v-else class="block mt-1 text-sm text-white/60">{{ host.reverseProxy }}</span>
-            </p>
+            </div>
             <div class="flex gap-2">
               <button 
                 @click="editHost(host)" 
@@ -279,8 +287,8 @@ function importHosts(newHosts: CaddyHost[]) {
             </a>
           </div>
           <div class="text-center md:text-right">
-            <p>Made with ❤️ for the Caddy community</p>
-            <p class="text-xs mt-1">Configurations are stored locally in your browser</p>
+            <p>{{ $t('app.footer.madeWith') }}</p>
+            <p class="text-xs mt-1">{{ $t('app.footer.storage') }}</p>
           </div>
         </div>
       </div>

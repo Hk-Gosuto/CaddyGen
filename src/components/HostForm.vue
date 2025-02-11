@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import type { CaddyHost } from '../types/caddy';
-import PresetSelect from './PresetSelect.vue';
-import type { PresetConfig } from '../types/caddy';
-import { v4 as uuidv4 } from 'uuid';
+import { ref, computed } from "vue";
+import type { CaddyHost } from "../types/caddy";
+import PresetSelect from "./PresetSelect.vue";
+import type { PresetConfig } from "../types/caddy";
+import { v4 as uuidv4 } from "uuid";
 
 const props = defineProps<{
   initialHost?: CaddyHost;
@@ -14,70 +14,72 @@ const emit = defineEmits<{
   cancel: [];
 }>();
 
-const host = ref<CaddyHost>(props.initialHost || {
-  id: uuidv4(),
-  domain: '',
-  fileServer: {
-    root: '',
-    browse: false,
-    php: false,
-    frankenphp: false,
-    hide: []
-  },
-  encode: false,
-  tls: {
-    email: '',
-    selfSigned: false,
-    certFile: '',
-    keyFile: ''
-  },
-  security: {
-    ipFilter: {
-      enabled: false,
-      allow: [],
-      block: []
+const host = ref<CaddyHost>(
+  props.initialHost || {
+    id: uuidv4(),
+    domain: "",
+    fileServer: {
+      root: "",
+      browse: false,
+      php: false,
+      frankenphp: false,
+      hide: [],
     },
-    rateLimit: {
-      enabled: false,
-      requests: 100,
-      window: '1m'
+    encode: false,
+    tls: {
+      email: "",
+      selfSigned: false,
+      certFile: "",
+      keyFile: "",
     },
-    cspEnabled: false,
-    csp: '',
-    forwardAuth: {
+    security: {
+      ipFilter: {
+        enabled: false,
+        allow: [],
+        block: [],
+      },
+      rateLimit: {
+        enabled: false,
+        requests: 100,
+        window: "1m",
+      },
+      cspEnabled: false,
+      csp: "",
+      forwardAuth: {
+        enabled: false,
+        url: "",
+        verifyHeader: "",
+        verifyValue: "",
+      },
+    },
+    cors: {
       enabled: false,
-      url: '',
-      verifyHeader: '',
-      verifyValue: ''
-    }
-  },
-  cors: {
-    enabled: false,
-    allowOrigins: [],
-    allowMethods: [],
-    allowHeaders: []
-  },
-  performance: {
-    brotli: false,
-    cacheControlEnabled: false,
-    cacheControl: ''
+      allowOrigins: [],
+      allowMethods: [],
+      allowHeaders: [],
+    },
+    performance: {
+      brotli: false,
+      cacheControlEnabled: false,
+      cacheControl: "",
+    },
   }
-});
+);
 
-const serverType = ref(host.value.fileServer ? 'fileServer' : '');
+const serverType = ref(host.value.fileServer ? "fileServer" : "");
 
 function handleServerTypeChange(event: Event) {
   const value = (event.target as HTMLSelectElement).value;
   serverType.value = value;
-  if (serverType.value === 'fileServer') {
+  if (serverType.value === "fileServer") {
     host.value.reverseProxy = undefined;
     if (!host.value.fileServer) {
       host.value.fileServer = {
-        root: '/var/www/html',
+        root: "/var/www/html",
         browse: false,
         php: false,
         frankenphp: false,
-        hide: []
+        hide: [],
       };
     }
   } else {
@@ -87,81 +89,91 @@ function handleServerTypeChange(event: Event) {
 const showAdvanced = ref(false);
 
 const tlsHasEmailOrSelfSigned = computed(() => {
-  if(host.value.tls.email && host.value.tls.email?.trim() !== '') return true;
-  if(host.value.tls.selfSigned) return true;
+  if (host.value.tls.email && host.value.tls.email?.trim() !== "") return true;
+  if (host.value.tls.selfSigned) return true;
   return false;
 });
 
 function handleSubmit() {
-  emit('save', host.value);
+  emit("save", host.value);
 }
 
 function applyPreset(preset: PresetConfig) {
   host.value.reverseProxy = `http://localhost:${preset.port}`;
   host.value.presetName = preset.name;
   host.value.fileServer = undefined;
-  serverType.value = '';
+  serverType.value = "";
 }
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="host-form bg-card rounded-lg border border-border/50 shadow-lg">
+  <form
+    @submit.prevent="handleSubmit"
+    class="host-form bg-card rounded-lg border border-border/50 shadow-lg"
+  >
     <div class="p-6">
       <h2 class="text-2xl font-semibold mb-6 text-foreground">
-        {{ initialHost ? 'Edit' : 'Add New' }} Host
+        {{ initialHost ? $t("hostForm.title.edit") : $t("hostForm.title.add") }}
       </h2>
 
       <div class="space-y-4">
         <div class="form-group">
-          <label>Domain:</label>
+          <label>{{ $t("hostForm.domain") }}:</label>
           <input v-model="host.domain" required placeholder="example.com" />
         </div>
-    
+
         <div class="form-group">
-          <label>Preset (optional):</label>
-          <PresetSelect 
+          <label>{{ $t("hostForm.preset") }}:</label>
+          <PresetSelect
             :initial-preset-name="host.presetName"
-            @select="applyPreset" 
+            @select="applyPreset"
           />
         </div>
 
         <div class="form-group">
-          <label>Type:</label>
+          <label>{{ $t("hostForm.type") }}:</label>
           <select v-model="serverType" @change="handleServerTypeChange">
-            <option value="">Reverse Proxy</option>
-            <option value="fileServer">File Server</option>
+            <option value="">
+              {{ $t("hostForm.typeOptions.reverseProxy") }}
+            </option>
+            <option value="fileServer">
+              {{ $t("hostForm.typeOptions.fileServer") }}
+            </option>
           </select>
         </div>
 
         <template v-if="serverType === 'fileServer'">
           <div class="form-group">
-            <label>Root Directory:</label>
+            <label>{{ $t("hostForm.fileServer.root") }}:</label>
             <input v-model="host.fileServer.root" placeholder="/var/www/html" />
           </div>
           <div class="form-group">
             <label class="checkbox">
               <input type="checkbox" v-model="host.fileServer.browse" />
-              Enable directory listing
+              {{ $t("hostForm.fileServer.browse") }}
             </label>
           </div>
           <div class="form-group">
             <label class="checkbox">
               <input type="checkbox" v-model="host.fileServer.php" />
-              Enable PHP support
-            </label> 
+              {{ $t("hostForm.fileServer.php") }}
+            </label>
           </div>
 
-          <div class="form-group" v-if="host.fileServer.php || host.fileServer.frankenphp">
+          <div
+            class="form-group"
+            v-if="host.fileServer.php || host.fileServer.frankenphp"
+          >
             <label class="checkbox">
               <input type="checkbox" v-model="host.fileServer.frankenphp" />
-              Enable <a href="https://frankenphp.dev">FrankenPHP</a>
+              {{ $t("hostForm.fileServer.frankenphp") }}
             </label>
           </div>
         </template>
 
         <template v-if="serverType === ''">
           <div class="form-group">
-            <label>Proxy To:</label>
+            <label>{{ $t("hostForm.reverseProxy.proxyTo") }}:</label>
             <input
               v-model="host.reverseProxy"
               placeholder="http://localhost:3000"
@@ -173,17 +185,25 @@ function applyPreset(preset: PresetConfig) {
         <div class="form-group">
           <label class="checkbox">
             <input type="checkbox" v-model="host.encode" />
-            Enable Gzip and Zstandard compression
+            {{ $t("hostForm.encoding") }}
           </label>
         </div>
 
-        <button type="button" @click="showAdvanced = !showAdvanced" class="btn-link">
-          {{ showAdvanced ? 'Hide' : 'Show' }} Advanced Options
+        <button
+          type="button"
+          @click="showAdvanced = !showAdvanced"
+          class="btn-link"
+        >
+          {{
+            showAdvanced
+              ? $t("hostForm.advanced.hide")
+              : $t("hostForm.advanced.show")
+          }}
         </button>
 
         <div v-if="showAdvanced" class="advanced-options">
           <div class="form-group">
-            <label>TLS Email (for Let's Encrypt):</label>
+            <label>{{ $t("hostForm.advanced.tls.email") }}:</label>
             <input
               v-model="host.tls.email"
               type="email"
@@ -194,32 +214,42 @@ function applyPreset(preset: PresetConfig) {
           <div class="form-group">
             <label class="checkbox">
               <input type="checkbox" v-model="host.tls.selfSigned" />
-              Use self-signed certificate
+              {{ $t("hostForm.advanced.tls.selfSigned") }}
             </label>
           </div>
 
           <div class="form-group">
-            <label>Cert File:</label>
-            <input v-model="host.tls.certFile" placeholder="cert.pem" :disabled="tlsHasEmailOrSelfSigned" />
+            <label>{{ $t("hostForm.advanced.tls.certFile") }}:</label>
+            <input
+              v-model="host.tls.certFile"
+              placeholder="cert.pem"
+              :disabled="tlsHasEmailOrSelfSigned"
+            />
           </div>
           <div class="form-group">
-            <label>Key File:</label>
-            <input v-model="host.tls.keyFile" placeholder="key.pem" :disabled="tlsHasEmailOrSelfSigned" />
+            <label>{{ $t("hostForm.advanced.tls.keyFile") }}:</label>
+            <input
+              v-model="host.tls.keyFile"
+              placeholder="key.pem"
+              :disabled="tlsHasEmailOrSelfSigned"
+            />
           </div>
 
           <!-- Security Section -->
           <div class="advanced-section">
-            <h3 class="text-lg font-semibold mb-4">Security</h3>
-            
+            <h3 class="text-lg font-semibold mb-4">
+              {{ $t("hostForm.advanced.security.title") }}
+            </h3>
+
             <div class="form-group">
               <label class="checkbox">
                 <input type="checkbox" v-model="host.security.cspEnabled" />
-                Enable Content Security Policy
+                {{ $t("hostForm.advanced.security.csp.enable") }}
               </label>
             </div>
-            
+
             <div class="form-group" v-if="host.security.cspEnabled">
-              <label>Content Security Policy:</label>
+              <label>{{ $t("hostForm.advanced.security.csp.policy") }}:</label>
               <input
                 v-model="host.security.csp"
                 placeholder="default-src 'self';"
@@ -228,21 +258,28 @@ function applyPreset(preset: PresetConfig) {
 
             <div class="form-group">
               <label class="checkbox">
-                <input type="checkbox" v-model="host.security.ipFilter.enabled" />
-                Enable IP Filtering
+                <input
+                  type="checkbox"
+                  v-model="host.security.ipFilter.enabled"
+                />
+                {{ $t("hostForm.advanced.security.ipFilter.enable") }}
               </label>
             </div>
 
             <div v-if="host.security.ipFilter.enabled">
-              <label>IP Allow List (one per line):</label>
+              <label
+                >{{ $t("hostForm.advanced.security.ipFilter.allow") }}:</label
+              >
               <textarea
                 :value="host.security.ipFilter.allow.join('\n')"
                 @input="e => host.security.ipFilter.allow = (e.target as HTMLTextAreaElement).value.split('\n').filter(Boolean)"
                 placeholder="192.168.1.0/24"
                 rows="3"
               ></textarea>
-              
-              <label>IP Block List (one per line):</label>
+
+              <label
+                >{{ $t("hostForm.advanced.security.ipFilter.block") }}:</label
+              >
               <textarea
                 :value="host.security.ipFilter.block.join('\n')"
                 @input="e => host.security.ipFilter.block = (e.target as HTMLTextAreaElement).value.split('\n').filter(Boolean)"
@@ -253,14 +290,25 @@ function applyPreset(preset: PresetConfig) {
 
             <div class="form-group">
               <label class="checkbox">
-                <input type="checkbox" v-model="host.security.forwardAuth.enabled" />
-                Enable Forward Authentication
+                <input
+                  type="checkbox"
+                  v-model="host.security.forwardAuth.enabled"
+                />
+                {{ $t("hostForm.advanced.security.forwardAuth.enable") }}
               </label>
             </div>
 
-            <div v-if="host.security.forwardAuth.enabled" class="space-y-4" style="margin-bottom:20px;">
+            <div
+              v-if="host.security.forwardAuth.enabled"
+              class="space-y-4"
+              style="margin-bottom: 20px"
+            >
               <div class="form-group">
-                <label>Authentication URL:</label>
+                <label
+                  >{{
+                    $t("hostForm.advanced.security.forwardAuth.url")
+                  }}:</label
+                >
                 <input
                   v-model="host.security.forwardAuth.url"
                   placeholder="http://authelia:9091/api/verify"
@@ -268,14 +316,22 @@ function applyPreset(preset: PresetConfig) {
                 />
               </div>
               <div class="form-group">
-                <label>Verify Header (optional):</label>
+                <label
+                  >{{
+                    $t("hostForm.advanced.security.forwardAuth.header")
+                  }}:</label
+                >
                 <input
                   v-model="host.security.forwardAuth.verifyHeader"
                   placeholder="Remote-User"
                 />
               </div>
               <div class="form-group">
-                <label>Verify Value (optional):</label>
+                <label
+                  >{{
+                    $t("hostForm.advanced.security.forwardAuth.value")
+                  }}:</label
+                >
                 <input
                   v-model="host.security.forwardAuth.verifyValue"
                   placeholder="{{user}}"
@@ -285,13 +341,20 @@ function applyPreset(preset: PresetConfig) {
 
             <div class="form-group">
               <label class="checkbox">
-                <input type="checkbox" v-model="host.security.rateLimit.enabled" />
-                Enable Rate Limiting
+                <input
+                  type="checkbox"
+                  v-model="host.security.rateLimit.enabled"
+                />
+                {{ $t("hostForm.advanced.security.rateLimit.enable") }}
               </label>
             </div>
 
             <div class="form-group" v-if="host.security.rateLimit.enabled">
-              <label>Rate Limit:</label>
+              <label
+                >{{
+                  $t("hostForm.advanced.security.rateLimit.requests")
+                }}:</label
+              >
               <div class="flex gap-2">
                 <input
                   type="number"
@@ -299,7 +362,9 @@ function applyPreset(preset: PresetConfig) {
                   class="w-24"
                   min="1"
                 />
-                <span class="text-muted-foreground self-center">requests per</span>
+                <span class="text-muted-foreground self-center">{{
+                  $t("hostForm.advanced.security.rateLimit.requests")
+                }}</span>
                 <input
                   v-model="host.security.rateLimit.window"
                   placeholder="1m"
@@ -314,13 +379,13 @@ function applyPreset(preset: PresetConfig) {
             <div class="form-group">
               <label class="checkbox">
                 <input type="checkbox" v-model="host.cors.enabled" />
-                Enable CORS
+                {{ $t("hostForm.advanced.cors.enable") }}
               </label>
             </div>
 
             <template v-if="host.cors.enabled">
               <div class="form-group">
-                <label>Allow Origins (one per line):</label>
+                <label>{{ $t("hostForm.advanced.cors.origins") }}:</label>
                 <textarea
                   :value="host.cors.allowOrigins.join('\n')"
                   @input="e => host.cors.allowOrigins = (e.target as HTMLTextAreaElement).value.split('\n').filter(Boolean)"
@@ -333,24 +398,31 @@ function applyPreset(preset: PresetConfig) {
 
           <!-- Performance Section -->
           <div class="advanced-section">
-            <h3 class="text-lg font-semibold mb-4">Performance</h3>
- 
+            <h3 class="text-lg font-semibold mb-4">
+              {{ $t("hostForm.advanced.performance.title") }}
+            </h3>
+
             <div class="form-group">
               <label class="checkbox">
                 <input type="checkbox" v-model="host.performance.brotli" />
-                Enable Brotli compression (requires <a href="https://caddyserver.com/docs/modules/http.encoders.br">an additional module</a>)
+                {{ $t("hostForm.advanced.performance.brotli") }}
               </label>
             </div>
 
             <div class="form-group">
               <label class="checkbox">
-                <input type="checkbox" v-model="host.performance.cacheControlEnabled" />
-                Enable Cache Control
+                <input
+                  type="checkbox"
+                  v-model="host.performance.cacheControlEnabled"
+                />
+                {{ $t("hostForm.advanced.performance.cache.enable") }}
               </label>
             </div>
 
             <div class="form-group" v-if="host.performance.cacheControlEnabled">
-              <label>Cache Control:</label>
+              <label
+                >{{ $t("hostForm.advanced.performance.cache.control") }}:</label
+              >
               <input
                 v-model="host.performance.cacheControl"
                 placeholder="public, max-age=3600"
@@ -361,9 +433,11 @@ function applyPreset(preset: PresetConfig) {
           <!-- File Server Hide Patterns -->
           <template v-if="serverType === 'fileServer'">
             <div class="advanced-section">
-              <h3 class="text-lg font-semibold mb-4">Hidden Files</h3>
+              <h3 class="text-lg font-semibold mb-4">
+                {{ $t("hostForm.advanced.hideFiles.title") }}
+              </h3>
               <div class="form-group">
-                <label>Hide Patterns (one per line):</label>
+                <label>{{ $t("hostForm.advanced.hideFiles.patterns") }}:</label>
                 <textarea
                   :value="host.fileServer.hide.join('\n')"
                   @input="e => host.fileServer.hide = (e.target as HTMLTextAreaElement).value.split('\n').filter(Boolean)"
@@ -380,15 +454,18 @@ function applyPreset(preset: PresetConfig) {
     </div>
 
     <div class="form-actions border-t border-border/50 p-6 bg-muted/50">
-      <button type="submit" class="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors">
-        Save Host
+      <button
+        type="submit"
+        class="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors"
+      >
+        {{ $t("hostForm.save") }}
       </button>
-      <button 
-        type="button" 
-        @click="emit('cancel')" 
+      <button
+        type="button"
+        @click="emit('cancel')"
         class="px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-lg transition-colors"
       >
-        Cancel
+        {{ $t("hostForm.cancel") }}
       </button>
     </div>
   </form>
@@ -402,7 +479,7 @@ function applyPreset(preset: PresetConfig) {
 
 .form-group {
   margin-bottom: 1rem;
-  position:relative;
+  position: relative;
 }
 
 .form-group label {
@@ -413,7 +490,7 @@ function applyPreset(preset: PresetConfig) {
 }
 
 .form-group label.checkbox {
-  padding-left:40px;
+  padding-left: 40px;
 }
 
 .form-group input,
@@ -458,7 +535,7 @@ function applyPreset(preset: PresetConfig) {
   transition: all 0.2s ease;
   flex-shrink: 0;
   margin: 0;
-  position:absolute;
+  position: absolute;
   top: -1px;
   left: 0px;
 }
@@ -469,7 +546,7 @@ function applyPreset(preset: PresetConfig) {
 }
 
 .checkbox input:checked::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   top: 45%;

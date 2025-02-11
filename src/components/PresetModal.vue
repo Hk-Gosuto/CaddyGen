@@ -66,7 +66,7 @@ function selectPreset(preset: PresetConfig) {
     <div class="relative bg-card border border-border/50 rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-hidden">
       <!-- Header -->
       <div class="flex items-center justify-between p-6 border-b border-border/50">
-        <h2 class="text-xl font-semibold">Select Preset</h2>
+        <h2 class="text-xl font-semibold">{{ $t('presetModal.title') }}</h2>
         <button @click="emit('close')" class="text-muted-foreground hover:text-foreground">
           <X class="w-5 h-5" />
         </button>
@@ -80,7 +80,7 @@ function selectPreset(preset: PresetConfig) {
             v-model="searchQuery"
             ref="searchInput"
             type="text"
-            placeholder="Search presets..."
+            :placeholder="$t('presetModal.search')"
             class="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-lg"
           />
         </div>
@@ -98,7 +98,7 @@ function selectPreset(preset: PresetConfig) {
                 : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
             ]"
           >
-            {{ category }}
+            {{ category === 'All' ? $t('presetModal.category.all') : category }}
           </button>
         </div>
       </div>
@@ -130,7 +130,7 @@ function selectPreset(preset: PresetConfig) {
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-muted-foreground hover:text-foreground transition-colors"
-                    :title="`Visit ${preset.name} website`"
+                    :title="$t('presetModal.preset.visitWebsite')"
                     @click="openLink(preset.webLink, $event)"
                   >
                     <Globe class="w-4 h-4" />
@@ -141,13 +141,13 @@ function selectPreset(preset: PresetConfig) {
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-muted-foreground hover:text-foreground transition-colors"
-                    :title="`View ${preset.name} on GitHub`"
+                    :title="$t('presetModal.preset.viewGithub')"
                     @click="openLink(preset.githubLink, $event)"
                   >
                     <Github class="w-4 h-4" />
                   </a>
                 </div>
-                <span class="text-sm text-muted-foreground">Port: {{ preset.port }}</span>
+                <span class="text-sm text-muted-foreground">{{ $t('presetModal.preset.port') }} {{ preset.port }}</span>
               </div>
             </div>
             <span class="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary inline-block mt-1">{{ preset.category }}</span>
@@ -155,7 +155,7 @@ function selectPreset(preset: PresetConfig) {
           </button>
         </div>
         <div v-if="filteredPresets.length === 0" class="text-center py-8 text-muted-foreground">
-          No presets found matching your search
+          {{ $t('presetModal.category.noResults') }}
         </div>
       </div>
     </div>

@@ -40,12 +40,12 @@ function clearSelection() {
 <template>
   <div class="space-y-2">
     <div v-if="selectedPreset" class="flex items-center gap-2">
-      <div class="flex-1 p-2 bg-muted rounded text-sm">{{ selectedPreset.name }} (Port: {{ selectedPreset.port }})</div>
+      <div class="flex-1 p-2 bg-muted rounded text-sm">{{ selectedPreset.name }} ({{ $t('presetSelect.current') }} {{ selectedPreset.port }})</div>
       <button 
         @click="clearSelection"
         class="p-2 text-destructive hover:text-destructive/90 transition-colors"
       >
-        Clear
+        {{ $t('presetSelect.clear') }}
       </button>
     </div>
     
@@ -54,7 +54,7 @@ function clearSelection() {
       type="button"
       class="w-full px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded transition-colors"
     >
-      {{ selectedPreset ? 'Change Preset' : 'Select from Presets' }}
+      {{ selectedPreset ? $t('presetSelect.change') : $t('presetSelect.select') }}
     </button>
     
     <PresetModal

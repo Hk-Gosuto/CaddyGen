@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import type { CaddyHost } from "../types/caddy";
-import * as PresetSelect from "./PresetSelect.vue";
+import PresetSelect from "./PresetSelect.vue";
 import type { PresetConfig } from "../types/caddy";
 import { v4 as uuidv4 } from "uuid";
 
